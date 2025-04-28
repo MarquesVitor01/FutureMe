@@ -1,24 +1,37 @@
 "use client";
 
 import Sidebar from "../components/layout/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import Image from "next/image";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface BoxData {
+  id?: string; // Agora é opcional, pois não passaremos 'id' manualmente para o Firestore
   name: string;
   description: string;
-  image?: string;
+  image?: string | null;
   textColor: string;
 }
 
+// const generateId = () => Math.random().toString(36).substring(2, 7); // Gera um id aleatório de 5 dígitos
+
 export default function HomePage() {
+  const [, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(true);
   const [boxes, setBoxes] = useState<BoxData[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string | null | undefined>(undefined);
   const [textColor, setTextColor] = useState("#FFFFFF");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,29 +44,131 @@ export default function HomePage() {
         setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAddBox = () => {
-    if (editIndex !== null) {
-      const updated = [...boxes];
-      updated[editIndex] = { name, description, image, textColor };
-      setBoxes(updated);
-      setEditIndex(null);
     } else {
-      setBoxes([...boxes, { name, description, image, textColor }]);
+      setImage(null); 
     }
-    setModalOpen(false);
-    setName("");
-    setDescription("");
-    setImage(undefined);
-    setTextColor("#FFFFFF");
+  };
+  
+
+  const handleAddBox = async () => {
+    if (!name || !description) {
+      setError("Nome e descrição são obrigatórios.");
+      return;
+    }
+
+    const newBox: BoxData = {
+      name,
+      description,
+      textColor,
+      image: image ?? "",
+    };
+
+    try {
+      // Adiciona ao Firestore, sem passar 'id' manualmente
+      const docRef = await addDoc(collection(db, "projetos"), {
+        name: newBox.name,
+        description: newBox.description,
+        textColor: newBox.textColor,
+        image: newBox.image,
+      });
+      console.log("Projeto adicionado com ID: ", docRef.id);
+
+      // Atualiza a lista de boxes com o ID retornado pelo Firestore
+      setBoxes([...boxes, { ...newBox, id: docRef.id }]); // O Firestore gera o 'id'
+      setModalOpen(false);
+      setName("");
+      setDescription("");
+      setImage(undefined);
+      setTextColor("#FFFFFF");
+      setError(null);
+    } catch (error) {
+      console.error("Erro ao adicionar projeto:", error);
+      setError("Erro ao salvar projeto.");
+    }
   };
 
-  const handleDeleteBox = (index: number) => {
-    const updated = boxes.filter((_, i) => i !== index);
-    setBoxes(updated);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "projetos"));
+        const projects: BoxData[] = [];
+        querySnapshot.forEach((doc) => {
+          // Agora estamos buscando o 'id' diretamente
+          projects.push({ id: doc.id, ...(doc.data() as BoxData) });
+        });
+        setBoxes(projects);
+      } catch (error) {
+        console.error("Erro ao buscar projetos:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const handleDeleteBox = async (id: string) => {
+    try {
+      const boxDoc = doc(db, "projetos", id);
+      await deleteDoc(boxDoc);
+      setBoxes(boxes.filter((box) => box.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir projeto:", error);
+      setError("Erro ao excluir projeto.");
+    }
   };
+
+  const handleEditBox = async () => {
+    if (!name || !description) {
+      setError("Nome e descrição são obrigatórios.");
+      return;
+    }
+
+    const updatedBox: BoxData = {
+      id: boxes[editIndex!].id, // ID do box a ser editado
+      name,
+      description,
+      textColor,
+      image: image === undefined ? undefined : image, // Se imagem for undefined, manter undefined
+    };
+
+    // Verifique se o 'id' não é undefined antes de passar para o Firestore
+    if (!updatedBox.id) {
+      setError("ID do projeto não encontrado.");
+      return;
+    }
+
+    try {
+      const boxDoc = doc(db, "projetos", updatedBox.id); // Passe o caminho correto
+
+      const updateData: Partial<BoxData> = {
+        name: updatedBox.name,
+        description: updatedBox.description,
+        textColor: updatedBox.textColor,
+      };
+
+      if (updatedBox.image !== undefined) {
+        updateData.image = updatedBox.image;
+      }
+
+      await updateDoc(boxDoc, updateData);
+
+      setBoxes(
+        boxes.map((box, index) => (index === editIndex ? updatedBox : box))
+      );
+      setModalOpen(false);
+      setName("");
+      setDescription("");
+      setImage(undefined);
+      setTextColor("#FFFFFF");
+      setError(null);
+    } catch (error) {
+      console.error("Erro ao editar projeto:", error);
+      setError("Erro ao editar projeto.");
+    }
+  };
+
+  const filteredBoxes = boxes.filter((box) =>
+    box.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -64,7 +179,7 @@ export default function HomePage() {
           isOpen ? "pl-66" : "pl-26"
         } p-8 transition-all duration-300 bg-gray-200 text-white min-h-screen`}
       >
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 ">
           <div>
             <h1 className="text-gray-900 text-4xl font-extrabold tracking-tight drop-shadow-xl">
               Olá, Vitor
@@ -97,7 +212,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          {boxes.map((box, index) => (
+          {filteredBoxes.map((box, index) => (
             <div
               key={index}
               className="relative h-40 rounded-xl shadow-lg p-4 bg-cover bg-center flex flex-col justify-end overflow-hidden border border-white/10 backdrop-blur-md bg-white/10"
@@ -122,7 +237,7 @@ export default function HomePage() {
                   Editar
                 </button>
                 <button
-                  onClick={() => handleDeleteBox(index)}
+                  onClick={() => handleDeleteBox(box.id!)}
                   className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-medium shadow cursor-pointer"
                 >
                   🗑
@@ -135,11 +250,11 @@ export default function HomePage() {
                     {box.name}
                   </h3>
                   <p className="text-sm text-white/90">
-                    {box.description.split(" ").slice(0, 2).join(" ")}...
+                    {box.description?.split(" ").slice(0, 2).join(" ") ?? ""}...
                   </p>
                 </div>
                 <a
-                  href="/dashboard"
+                  href={`/dashboard/${box.id}`}
                   className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded shadow-md transition font-semibold cursor-pointer"
                 >
                   Acessar
@@ -155,7 +270,9 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40" />
 
           <div className="bg-white text-black rounded-xl p-6 w-full max-w-md z-50 shadow-xl relative">
-            <h2 className="text-2xl font-bold mb-4">Adicionar Projeto</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              {editIndex !== null ? "Editar Projeto" : "Adicionar Projeto"}
+            </h2>
             <input
               type="text"
               placeholder="Nome"
@@ -217,7 +334,7 @@ export default function HomePage() {
                 Cancelar
               </button>
               <button
-                onClick={handleAddBox}
+                onClick={editIndex !== null ? handleEditBox : handleAddBox}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
               >
                 Concluir

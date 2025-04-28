@@ -67,18 +67,6 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           >
             {isOpen ? "Home" : "🏠"}
           </Link>
-          <Link
-            href="/settings"
-            className="flex items-center justify-center py-3 px-6 w-full rounded-lg bg-gray-200 text-gray-900 hover:bg-gray-300 transition"
-          >
-            {isOpen ? "Configurações" : "⚙️"}
-          </Link>
-          <Link
-            href="/profile"
-            className="flex items-center justify-center py-3 px-6 w-full rounded-lg bg-gray-200 text-gray-900 hover:bg-gray-300 transition"
-          >
-            {isOpen ? "Perfil" : "👤"}
-          </Link>
         </nav>
 
         <hr className="my-6 mx-4 border-gray-700" />
