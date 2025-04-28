@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LoginWrapper from "./components/LoginWrapper";
-import LoginImageSection from "./components/LoginImageSection";
-import LoginLogoHeader from "./components/LoginLogoHeader";
-import LoginForm from "./components/LoginForm";
+import LoginWrapper from "./login/components/LoginWrapper";
+import LoginImageSection from "./login/components/LoginImageSection";
+import LoginLogoHeader from "./login/components/LoginLogoHeader";
+import LoginForm from "./login/components/LoginForm";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
