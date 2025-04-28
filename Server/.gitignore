@@ -1,0 +1,13 @@
+# Node.js dependencies
+node_modules/
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Arquivos de log
+*.log
+
+# Firebase Service Account Key
+/config/serviceAccountKey.json
+
+
