@@ -18,7 +18,8 @@ app.use(express.json());
 const syncRoutes = require("./src/routes/syncRoutes");
 app.use("/api/sync", syncRoutes);
 
-// Início do servidor
+module.exports = app;
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
