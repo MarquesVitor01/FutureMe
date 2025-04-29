@@ -39,11 +39,11 @@ export default function Page() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [, setSyncLoading] = useState<boolean>(false);
-  const { user, loading } = useAuth(); // Aqui pegamos o estado do auth
+  const { user, loading } = useAuth(); 
   const router = useRouter();
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/"); // Se não estiver logado, manda pra login
+      router.push("/"); 
     }
   }, [user, loading, router]);
 
@@ -62,7 +62,6 @@ export default function Page() {
     };
 
     if (user) {
-      // Só carrega projetos se tiver usuário
       fetchProjects();
     }
   }, [user]);
@@ -193,10 +192,10 @@ export default function Page() {
   const handleSyncClients = async () => {
     setSyncLoading(true);
     try {
-      const response = await fetch("https://future-me-dt8d.vercel.app/api/sync", {
+      const response = await fetch("https://future-me-sigma.vercel.app/api/sync", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Especifica que o conteúdo é JSON
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           data: boxes.map((box) => ({
