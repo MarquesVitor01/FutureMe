@@ -5,6 +5,8 @@ import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 // import LoadingScreen from "@/app/components/layout/LoadingScreen";
+import { ToastContainer, toast } from "react-toastify";
+
 import ProjectNotFound from "./ProjectNotFound";
 import DashboardHeader from "./DashboardHeader";
 import ControlsSection from "./ControlsSection";
@@ -84,8 +86,10 @@ export default function DashboardClient({ projectData }: DashboardClientProps) {
     try {
       const projectRef = doc(db, "projetos", project.id);
       await updateDoc(projectRef, { tables: updatedTables });
+      toast.success("Sucesso ao criar tabela!");
     } catch (error) {
       console.error("Error adding table to project:", error);
+      toast.error("Erro ao criar tabela!");
     }
 
     setIsModalOpen(false);
@@ -244,6 +248,7 @@ export default function DashboardClient({ projectData }: DashboardClientProps) {
           onSave={handleSaveTableChanges}
         />
       )}
+      <ToastContainer />
     </>
   );
 }

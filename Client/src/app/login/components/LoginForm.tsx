@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 
 interface LoginFormData {
   email: string;
@@ -73,18 +73,18 @@ export default function LoginForm() {
         Entrar
       </button>
 
-      <div className="text-right text-sm mt-2">
+      {/* <div className="text-right text-sm mt-2">
         <Link href="/forgot-password" className="text-blue-600 hover:underline">
           Esqueceu a senha?
         </Link>
-      </div>
+      </div> */}
 
-      <div className="text-center text-sm text-gray-600 mt-6">
+      {/* <div className="text-center text-sm text-gray-600 mt-6">
         Ainda não tem uma conta?{" "}
         <Link href="/signup" className="text-blue-600 hover:underline">
           Cadastre-se
         </Link>
-      </div>
+      </div> */}
     </form>
   );
 }

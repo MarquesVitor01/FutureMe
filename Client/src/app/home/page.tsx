@@ -15,7 +15,8 @@ import ProjectModal from "./components/ProjectModal";
 import ProjectsGrid from "./components/ProjectsGrid";
 import ProjectSearch from "./components/ProjectSearch";
 import { useRouter } from "next/navigation";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/layout/LoadingScreen";
 
@@ -114,9 +115,11 @@ export default function Page() {
 
       setBoxes([...boxes, { ...newBox, id: docRef.id }]);
       resetModal();
+      toast.success("Sucesso ao salvar projeto!");
     } catch (error) {
       console.error("Erro ao adicionar projeto:", error);
       setError("Erro ao salvar projeto.");
+      toast.error("Erro ao salvar projeto!");
     }
   };
 
@@ -125,9 +128,11 @@ export default function Page() {
       const boxDoc = doc(db, "projetos", id);
       await deleteDoc(boxDoc);
       setBoxes(boxes.filter((box) => box.id !== id));
+      toast.success("Projeto excluido com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir projeto:", error);
       setError("Erro ao excluir projeto.");
+      toast.error("Erro ao excluir projeto!");
     }
   };
 
@@ -210,11 +215,14 @@ export default function Page() {
       const result = await response.json();
       if (response.ok) {
         console.log("Sincronização concluída!");
+        toast.success("Cliente salvo com sucesso!");
       } else {
         console.error("Erro na sincronização:", result.error);
+        toast.error("Erro ao sincronizar Google Sheets!");
       }
     } catch (error) {
       console.error("Erro ao sincronizar clientes:", error);
+      toast.error("Erro ao sincronizar Google Sheets!");
     } finally {
       setSyncLoading(false);
     }
@@ -279,6 +287,7 @@ export default function Page() {
         setTextColor={setTextColor}
         isEditing={editIndex !== null}
       />
+      <ToastContainer />
     </>
   );
 }
