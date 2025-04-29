@@ -29,7 +29,10 @@ interface ProjectData {
   tables?: TableData[];
 }
 
-type PageProps = { params: { id: string } };
+type PageProps = {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
 export default function Page({ params }: PageProps) {
   const [isOpen, setIsOpen] = useState(true);
