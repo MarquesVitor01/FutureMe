@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Sidebar from "@/app/components/layout/Sidebar";
 import { useState, useEffect } from "react";
@@ -9,7 +9,7 @@ import ProjectNotFound from "./components/ProjectNotFound";
 import DashboardHeader from "./components/DashboardHeader";
 import ControlsSection from "./components/ControlsSection";
 import TablesView from "./components/TablesView";
-import AddTableModal from "./components/AddTableModal"; 
+import AddTableModal from "./components/AddTableModal";
 import TableInfoModal from "./components/TableInfoModal";
 
 interface TableData {
@@ -29,11 +29,7 @@ interface ProjectData {
   tables?: TableData[];
 }
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
+type PageProps = { params: { id: string } };
 
 export default function Page({ params }: PageProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -235,9 +231,9 @@ export default function Page({ params }: PageProps) {
           isOpen ? "pl-66" : "pl-26"
         } p-8 transition-all duration-300 bg-gray-200 text-white min-h-screen flex flex-col justify-between`}
       >
-        <DashboardHeader 
-          projectName={project.name} 
-          projectDescription={project.description} 
+        <DashboardHeader
+          projectName={project.name}
+          projectDescription={project.description}
         />
 
         <ControlsSection
