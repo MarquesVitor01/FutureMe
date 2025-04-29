@@ -29,7 +29,13 @@ interface ProjectData {
   tables?: TableData[];
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedView, setSelectedView] = useState("vertical");
   const [searchTerm, setSearchTerm] = useState("");
