@@ -3,6 +3,7 @@
 # Projeto de Gestão de Projetos
 Este projeto é uma aplicação web para gerenciar projetos, incluindo autenticação de usuários, criação, edição e exclusão de projetos. A aplicação é integrada com o Firebase para autenticação e armazenamento de dados.
 
+### Login de test: email: test@test.com / senha: test123. Já possui algumas tarefas criadas, realize os tipos de tests necessários.  
 
 # Sobre o Projeto 
 Autenticação: A aplicação permite login de usuários utilizando email e senha, com verificação de erros durante o login (ex: usuário não encontrado, senha incorreta).
