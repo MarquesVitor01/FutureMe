@@ -193,7 +193,7 @@ export default function Page() {
   const handleSyncClients = async () => {
     setSyncLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/sync", {
+      const response = await fetch("https://future-me-dt8d.vercel.app/api/sync", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Especifica que o conteúdo é JSON
