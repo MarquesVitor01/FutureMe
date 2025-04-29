@@ -128,6 +128,7 @@ O backend é composto por vários arquivos e funções, conforme descrito abaixo
 
 2. Instale as dependências:
    npm install
+   
 3.Crie um arquivo .env na raiz do projeto e adicione as variáveis de ambiente necessárias:
   (test)
   TYPE_2=service_account
