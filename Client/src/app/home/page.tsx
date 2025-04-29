@@ -233,7 +233,7 @@ export default function Page() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-gray-900 text-4xl font-extrabold tracking-tight drop-shadow-xl">
-              Olá, Vitor
+              Olá
             </h1>
             <p className="text-gray-600 text-lg">Aqui estão seus projetos</p>
           </div>
