@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Sidebar from "@/app/components/layout/Sidebar";
 import { useState, useEffect } from "react";
@@ -9,15 +9,8 @@ import ProjectNotFound from "./components/ProjectNotFound";
 import DashboardHeader from "./components/DashboardHeader";
 import ControlsSection from "./components/ControlsSection";
 import TablesView from "./components/TablesView";
-import AddTableModal from "./components/AddTableModal";
+import AddTableModal from "./components/AddTableModal"; 
 import TableInfoModal from "./components/TableInfoModal";
-import { Metadata } from 'next';
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  return {
-    title: `Project ${params.id}`,
-  };
-}
 
 interface TableData {
   title: string;
@@ -236,9 +229,9 @@ export default function Page({ params }: { params: { id: string } }) {
           isOpen ? "pl-66" : "pl-26"
         } p-8 transition-all duration-300 bg-gray-200 text-white min-h-screen flex flex-col justify-between`}
       >
-        <DashboardHeader
-          projectName={project.name}
-          projectDescription={project.description}
+        <DashboardHeader 
+          projectName={project.name} 
+          projectDescription={project.description} 
         />
 
         <ControlsSection
