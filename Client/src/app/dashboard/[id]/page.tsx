@@ -11,6 +11,13 @@ import ControlsSection from "./components/ControlsSection";
 import TablesView from "./components/TablesView";
 import AddTableModal from "./components/AddTableModal";
 import TableInfoModal from "./components/TableInfoModal";
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  return {
+    title: `Project ${params.id}`,
+  };
+}
 
 interface TableData {
   title: string;
@@ -29,12 +36,7 @@ interface ProjectData {
   tables?: TableData[];
 }
 
-type PageProps = {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
-
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: { params: { id: string } }) {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedView, setSelectedView] = useState("vertical");
   const [searchTerm, setSearchTerm] = useState("");
