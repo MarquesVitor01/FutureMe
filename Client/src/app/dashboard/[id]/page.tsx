@@ -29,7 +29,7 @@ interface ProjectData {
   tables?: TableData[];
 }
 
-export default function DashboardPage({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedView, setSelectedView] = useState("vertical");
   const [searchTerm, setSearchTerm] = useState("");

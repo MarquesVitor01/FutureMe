@@ -7,7 +7,7 @@ import LoginLogoHeader from "./components/LoginLogoHeader";
 import LoginForm from "./components/LoginForm";
 import { motion } from "framer-motion";
 
-export default function LoginPage() {
+export default function Page() {
   const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {

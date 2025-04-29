@@ -27,7 +27,7 @@ interface BoxData {
   textColor: string;
 }
 
-export default function ProjectsPage() {
+export default function Page() {
   const [, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(true);
   const [boxes, setBoxes] = useState<BoxData[]>([]);
