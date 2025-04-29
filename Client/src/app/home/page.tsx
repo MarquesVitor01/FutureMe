@@ -38,6 +38,7 @@ export default function ProjectsPage() {
   const [textColor, setTextColor] = useState("#FFFFFF");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [, setSyncLoading] = useState<boolean>(false);
   const { user, loading } = useAuth(); // Aqui pegamos o estado do auth
   const router = useRouter();
   useEffect(() => {
@@ -60,7 +61,8 @@ export default function ProjectsPage() {
       }
     };
 
-    if (user) { // Só carrega projetos se tiver usuário
+    if (user) {
+      // Só carrega projetos se tiver usuário
       fetchProjects();
     }
   }, [user]);
@@ -84,7 +86,7 @@ export default function ProjectsPage() {
   if (loading) {
     return <LoadingScreen />;
   }
-  
+
   if (!user) {
     return null; // ou uma tela de loading mínima
   }
@@ -188,6 +190,37 @@ export default function ProjectsPage() {
     box.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleSyncClients = async () => {
+    setSyncLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Especifica que o conteúdo é JSON
+        },
+        body: JSON.stringify({
+          data: boxes.map((box) => ({
+            id: box.id,
+            name: box.name,
+            description: box.description,
+            textColor: box.textColor,
+          })),
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log("Sincronização concluída!");
+      } else {
+        console.error("Erro na sincronização:", result.error);
+      }
+    } catch (error) {
+      console.error("Erro ao sincronizar clientes:", error);
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
   return (
     <>
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -209,6 +242,12 @@ export default function ProjectsPage() {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
+          <button
+            onClick={handleSyncClients}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+          >
+            Sincronizar
+          </button>
         </div>
 
         <ProjectsGrid

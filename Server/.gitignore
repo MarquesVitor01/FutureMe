@@ -1,13 +1,9 @@
-# Node.js dependencies
+# Node modules
 node_modules/
 
-# Arquivo de variáveis de ambiente
+# Env files
 .env
 
-# Arquivos de log
-*.log
-
-# Firebase Service Account Key
-/config/serviceAccountKey.json
-
+# Excel Files
+projetos.xlsx
 
